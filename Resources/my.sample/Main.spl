@@ -1,0 +1,321 @@
+namespace my.sample;
+
+composite Main {
+	type StockReportSchema = tuple< 
+	    float64 vr0, float64 vi0,
+	    float64 vr1, float64 vi1,
+	    float64 vr2, float64 vi2,
+	    float64 vr3, float64 vi3,
+	    float64 vr4, float64 vi4,
+	    float64 vr5, float64 vi5,
+	    float64 vr6, float64 vi6,
+	    float64 vr7, float64 vi7,
+	    float64 vr8, float64 vi8,
+	    float64 vr9, float64 vi9,
+	    float64 vr10, float64 vi10,
+	    float64 vr11, float64 vi11,
+	    float64 vr12, float64 vi12,
+	    float64 vr13, float64 vi13,
+	    float64 vr14, float64 vi14,
+	    float64 vr15, float64 vi15
+	>;
+	graph
+		stream<StockReportSchema> Input = FileSource() {
+			param
+				file: "stock_report.dat";
+				format: csv;
+				ignoreExtraCSVValues: true;
+		}
+
+		stream<StockReportSchema> Inverse1 = Custom(Input) {
+		    logic
+		        onTuple Input: {
+		            StockReportSchema srs = {
+		        		vr0 = Input.vr0,
+						vi0 = Input.vi0,
+		        		vr8 = Input.vr1,
+						vi8 = Input.vi1,
+		        		vr1 = Input.vr2,
+						vi1 = Input.vi2,
+		        		vr9 = Input.vr3,
+						vi9 = Input.vi3,
+		        		vr2 = Input.vr4,
+						vi2 = Input.vi4,
+		        		vr10 = Input.vr5,
+						vi10 = Input.vi5,
+		        		vr3 = Input.vr6,
+						vi3 = Input.vi6,
+		        		vr11 = Input.vr7,
+						vi11 = Input.vi7,
+		        		vr4 = Input.vr8,
+						vi4 = Input.vi8,
+		        		vr12 = Input.vr9,
+						vi12 = Input.vi9,
+		        		vr5 = Input.vr10,
+						vi5 = Input.vi10,
+		        		vr13 = Input.vr11,
+						vi13 = Input.vi11,
+		        		vr6 = Input.vr12,
+						vi6 = Input.vi12,
+		        		vr14 = Input.vr13,
+						vi14 = Input.vi13,
+		        		vr7 = Input.vr14,
+						vi7 = Input.vi14,
+		        		vr15 = Input.vr15,
+						vi15 = Input.vi15
+					};
+		            submit(srs, Inverse1);
+		        }
+		}
+		
+		stream<StockReportSchema> Inverse2 = Custom(Inverse1) {
+		    logic
+		        onTuple Inverse1: {
+		            StockReportSchema srs = {
+		        		vr0 = Inverse1.vr0,
+						vi0 = Inverse1.vi0,
+		        		vr4 = Inverse1.vr1,
+						vi4 = Inverse1.vi1,
+		        		vr1 = Inverse1.vr2,
+						vi1 = Inverse1.vi2,
+		        		vr5 = Inverse1.vr3,
+						vi5 = Inverse1.vi3,
+		        		vr2 = Inverse1.vr4,
+						vi2 = Inverse1.vi4,
+		        		vr6 = Inverse1.vr5,
+						vi6 = Inverse1.vi5,
+		        		vr3 = Inverse1.vr6,
+						vi3 = Inverse1.vi6,
+		        		vr7 = Inverse1.vr7,
+						vi7 = Inverse1.vi7,
+		        		vr8 = Inverse1.vr8,
+						vi8 = Inverse1.vi8,
+		        		vr12 = Inverse1.vr9,
+						vi12 = Inverse1.vi9,
+		        		vr9 = Inverse1.vr10,
+						vi9 = Inverse1.vi10,
+		        		vr13 = Inverse1.vr11,
+						vi13 = Inverse1.vi11,
+		        		vr10 = Inverse1.vr12,
+						vi10 = Inverse1.vi12,
+		        		vr14 = Inverse1.vr13,
+						vi14 = Inverse1.vi13,
+		        		vr11 = Inverse1.vr14,
+						vi11 = Inverse1.vi14,
+		        		vr15 = Inverse1.vr15,
+						vi15 = Inverse1.vi15
+					};
+		            submit(srs, Inverse2);
+		        }
+		}
+		
+		stream<StockReportSchema> Inverse3 = Custom(Inverse2) {
+		    logic
+		        onTuple Inverse2: {
+		            StockReportSchema srs = {
+		        		vr0 = Inverse2.vr0,
+						vi0 = Inverse2.vi0,
+		        		vr2 = Inverse2.vr1,
+						vi2 = Inverse2.vi1,
+		        		vr1 = Inverse2.vr2,
+						vi1 = Inverse2.vi2,
+		        		vr3 = Inverse2.vr3,
+						vi3 = Inverse2.vi3,
+		        		vr4 = Inverse2.vr4,
+						vi4 = Inverse2.vi4,
+		        		vr6 = Inverse2.vr5,
+						vi6 = Inverse2.vi5,
+		        		vr5 = Inverse2.vr6,
+						vi5 = Inverse2.vi6,
+		        		vr7 = Inverse2.vr7,
+						vi7 = Inverse2.vi7,
+		        		vr8 = Inverse2.vr8,
+						vi8 = Inverse2.vi8,
+		        		vr10 = Inverse2.vr9,
+						vi10 = Inverse2.vi9,
+		        		vr9 = Inverse2.vr10,
+						vi9 = Inverse2.vi10,
+		        		vr11 = Inverse2.vr11,
+						vi11 = Inverse2.vi11,
+		        		vr12 = Inverse2.vr12,
+						vi12 = Inverse2.vi12,
+		        		vr14 = Inverse2.vr13,
+						vi14 = Inverse2.vi13,
+		        		vr13 = Inverse2.vr14,
+						vi13 = Inverse2.vi14,
+		        		vr15 = Inverse2.vr15,
+						vi15 = Inverse2.vi15
+					};
+		            submit(srs, Inverse3);
+		        }
+		}
+		
+		stream<StockReportSchema> Output1 = Custom(Inverse3) {
+		    logic
+		        onTuple Inverse3: {
+		            StockReportSchema srs = {
+		        		vr0 = Inverse3.vr0 + Inverse3.vr1,
+						vi0 = Inverse3.vi0 + Inverse3.vi1,
+		        		vr1 = Inverse3.vr0 - Inverse3.vr1,
+						vi1 = Inverse3.vi0 - Inverse3.vi1,
+		        		vr2 = Inverse3.vr2 + Inverse3.vr3,
+						vi2 = Inverse3.vi2 + Inverse3.vi3,
+		        		vr3 = Inverse3.vr2 - Inverse3.vr3,
+						vi3 = Inverse3.vi2 - Inverse3.vi3,
+		        		vr4 = Inverse3.vr4 + Inverse3.vr5,
+						vi4 = Inverse3.vi4 + Inverse3.vi5,
+		        		vr5 = Inverse3.vr4 - Inverse3.vr5,
+						vi5 = Inverse3.vi4 - Inverse3.vi5,
+		        		vr6 = Inverse3.vr6 + Inverse3.vr7,
+						vi6 = Inverse3.vi6 + Inverse3.vi7,
+		        		vr7 = Inverse3.vr6 - Inverse3.vr7,
+						vi7 = Inverse3.vi6 - Inverse3.vi7,
+		        		vr8 = Inverse3.vr8 + Inverse3.vr9,
+						vi8 = Inverse3.vi8 + Inverse3.vi9,
+		        		vr9 = Inverse3.vr8 - Inverse3.vr9,
+						vi9 = Inverse3.vi8 - Inverse3.vi9,
+		        		vr10 = Inverse3.vr10 + Inverse3.vr11,
+						vi10 = Inverse3.vi10 + Inverse3.vi11,
+		        		vr11 = Inverse3.vr10 - Inverse3.vr11,
+						vi11 = Inverse3.vi10 - Inverse3.vi11,
+		        		vr12 = Inverse3.vr12 + Inverse3.vr13,
+						vi12 = Inverse3.vi12 + Inverse3.vi13,
+		        		vr13 = Inverse3.vr12 - Inverse3.vr13,
+						vi13 = Inverse3.vi12 - Inverse3.vi13,
+		        		vr14 = Inverse3.vr14 + Inverse3.vr15,
+						vi14 = Inverse3.vi14 + Inverse3.vi15,
+		        		vr15 = Inverse3.vr14 - Inverse3.vr15,
+						vi15 = Inverse3.vi14 - Inverse3.vi15
+					};
+		            submit(srs, Output1);
+		        }
+		}
+		
+		stream<StockReportSchema> Output2 = Custom(Output1) {
+		    logic
+		        onTuple Output1: {
+		            StockReportSchema srs = {
+		        		vr0 = Output1.vr0 + ((float64) 1) * Output1.vr2 + ((float64) 0) * Output1.vi2,
+						vi0 = Output1.vi0 - ((float64) 0) * Output1.vr2 + ((float64) 1) * Output1.vi2,
+		        		vr2 = Output1.vr0 - ((float64) 1) * Output1.vr2 - ((float64) 0) * Output1.vi2,
+						vi2 = Output1.vi0 + ((float64) 0) * Output1.vr2 - ((float64) 1) * Output1.vi2,
+		        		vr1 = Output1.vr1 + ((float64) 1.61554457443259e-15) * Output1.vr3 + ((float64) 1) * Output1.vi3,
+						vi1 = Output1.vi1 - ((float64) 1) * Output1.vr3 + ((float64) 1.61554457443259e-15) * Output1.vi3,
+		        		vr3 = Output1.vr1 - ((float64) 1.61554457443259e-15) * Output1.vr3 - ((float64) 1) * Output1.vi3,
+						vi3 = Output1.vi1 + ((float64) 1) * Output1.vr3 - ((float64) 1.61554457443259e-15) * Output1.vi3,
+		        		vr4 = Output1.vr4 + ((float64) 1) * Output1.vr6 + ((float64) 0) * Output1.vi6,
+						vi4 = Output1.vi4 - ((float64) 0) * Output1.vr6 + ((float64) 1) * Output1.vi6,
+		        		vr6 = Output1.vr4 - ((float64) 1) * Output1.vr6 - ((float64) 0) * Output1.vi6,
+						vi6 = Output1.vi4 + ((float64) 0) * Output1.vr6 - ((float64) 1) * Output1.vi6,
+		        		vr5 = Output1.vr5 + ((float64) 1.61554457443259e-15) * Output1.vr7 + ((float64) 1) * Output1.vi7,
+						vi5 = Output1.vi5 - ((float64) 1) * Output1.vr7 + ((float64) 1.61554457443259e-15) * Output1.vi7,
+		        		vr7 = Output1.vr5 - ((float64) 1.61554457443259e-15) * Output1.vr7 - ((float64) 1) * Output1.vi7,
+						vi7 = Output1.vi5 + ((float64) 1) * Output1.vr7 - ((float64) 1.61554457443259e-15) * Output1.vi7,
+		        		vr8 = Output1.vr8 + ((float64) 1) * Output1.vr10 + ((float64) 0) * Output1.vi10,
+						vi8 = Output1.vi8 - ((float64) 0) * Output1.vr10 + ((float64) 1) * Output1.vi10,
+		        		vr10 = Output1.vr8 - ((float64) 1) * Output1.vr10 - ((float64) 0) * Output1.vi10,
+						vi10 = Output1.vi8 + ((float64) 0) * Output1.vr10 - ((float64) 1) * Output1.vi10,
+		        		vr9 = Output1.vr9 + ((float64) 1.61554457443259e-15) * Output1.vr11 + ((float64) 1) * Output1.vi11,
+						vi9 = Output1.vi9 - ((float64) 1) * Output1.vr11 + ((float64) 1.61554457443259e-15) * Output1.vi11,
+		        		vr11 = Output1.vr9 - ((float64) 1.61554457443259e-15) * Output1.vr11 - ((float64) 1) * Output1.vi11,
+						vi11 = Output1.vi9 + ((float64) 1) * Output1.vr11 - ((float64) 1.61554457443259e-15) * Output1.vi11,
+		        		vr12 = Output1.vr12 + ((float64) 1) * Output1.vr14 + ((float64) 0) * Output1.vi14,
+						vi12 = Output1.vi12 - ((float64) 0) * Output1.vr14 + ((float64) 1) * Output1.vi14,
+		        		vr14 = Output1.vr12 - ((float64) 1) * Output1.vr14 - ((float64) 0) * Output1.vi14,
+						vi14 = Output1.vi12 + ((float64) 0) * Output1.vr14 - ((float64) 1) * Output1.vi14,
+		        		vr13 = Output1.vr13 + ((float64) 1.61554457443259e-15) * Output1.vr15 + ((float64) 1) * Output1.vi15,
+						vi13 = Output1.vi13 - ((float64) 1) * Output1.vr15 + ((float64) 1.61554457443259e-15) * Output1.vi15,
+		        		vr15 = Output1.vr13 - ((float64) 1.61554457443259e-15) * Output1.vr15 - ((float64) 1) * Output1.vi15,
+						vi15 = Output1.vi13 + ((float64) 1) * Output1.vr15 - ((float64) 1.61554457443259e-15) * Output1.vi15
+					};
+		            submit(srs, Output2);
+		        }
+		}
+		
+		stream<StockReportSchema> Output3 = Custom(Output2) {
+		    logic
+		        onTuple Output2: {
+		            StockReportSchema srs = {
+		        		vr0 = Output2.vr0 + ((float64) 1) * Output2.vr4 + ((float64) 0) * Output2.vi4,
+						vi0 = Output2.vi0 - ((float64) 0) * Output2.vr4 + ((float64) 1) * Output2.vi4,
+		        		vr4 = Output2.vr0 - ((float64) 1) * Output2.vr4 - ((float64) 0) * Output2.vi4,
+						vi4 = Output2.vi0 + ((float64) 0) * Output2.vr4 - ((float64) 1) * Output2.vi4,
+		        		vr1 = Output2.vr1 + ((float64) 0.707106781186548) * Output2.vr5 + ((float64) 0.707106781186547) * Output2.vi5,
+						vi1 = Output2.vi1 - ((float64) 0.707106781186547) * Output2.vr5 + ((float64) 0.707106781186548) * Output2.vi5,
+		        		vr5 = Output2.vr1 - ((float64) 0.707106781186548) * Output2.vr5 - ((float64) 0.707106781186547) * Output2.vi5,
+						vi5 = Output2.vi1 + ((float64) 0.707106781186547) * Output2.vr5 - ((float64) 0.707106781186548) * Output2.vi5,
+		        		vr2 = Output2.vr2 + ((float64) 1.61554457443259e-15) * Output2.vr6 + ((float64) 1) * Output2.vi6,
+						vi2 = Output2.vi2 - ((float64) 1) * Output2.vr6 + ((float64) 1.61554457443259e-15) * Output2.vi6,
+		        		vr6 = Output2.vr2 - ((float64) 1.61554457443259e-15) * Output2.vr6 - ((float64) 1) * Output2.vi6,
+						vi6 = Output2.vi2 + ((float64) 1) * Output2.vr6 - ((float64) 1.61554457443259e-15) * Output2.vi6,
+		        		vr3 = Output2.vr3 + ((float64) -0.707106781186546) * Output2.vr7 + ((float64) 0.707106781186549) * Output2.vi7,
+						vi3 = Output2.vi3 - ((float64) 0.707106781186549) * Output2.vr7 + ((float64) -0.707106781186546) * Output2.vi7,
+		        		vr7 = Output2.vr3 - ((float64) -0.707106781186546) * Output2.vr7 - ((float64) 0.707106781186549) * Output2.vi7,
+						vi7 = Output2.vi3 + ((float64) 0.707106781186549) * Output2.vr7 - ((float64) -0.707106781186546) * Output2.vi7,
+		        		vr8 = Output2.vr8 + ((float64) 1) * Output2.vr12 + ((float64) 0) * Output2.vi12,
+						vi8 = Output2.vi8 - ((float64) 0) * Output2.vr12 + ((float64) 1) * Output2.vi12,
+		        		vr12 = Output2.vr8 - ((float64) 1) * Output2.vr12 - ((float64) 0) * Output2.vi12,
+						vi12 = Output2.vi8 + ((float64) 0) * Output2.vr12 - ((float64) 1) * Output2.vi12,
+		        		vr9 = Output2.vr9 + ((float64) 0.707106781186548) * Output2.vr13 + ((float64) 0.707106781186547) * Output2.vi13,
+						vi9 = Output2.vi9 - ((float64) 0.707106781186547) * Output2.vr13 + ((float64) 0.707106781186548) * Output2.vi13,
+		        		vr13 = Output2.vr9 - ((float64) 0.707106781186548) * Output2.vr13 - ((float64) 0.707106781186547) * Output2.vi13,
+						vi13 = Output2.vi9 + ((float64) 0.707106781186547) * Output2.vr13 - ((float64) 0.707106781186548) * Output2.vi13,
+		        		vr10 = Output2.vr10 + ((float64) 1.61554457443259e-15) * Output2.vr14 + ((float64) 1) * Output2.vi14,
+						vi10 = Output2.vi10 - ((float64) 1) * Output2.vr14 + ((float64) 1.61554457443259e-15) * Output2.vi14,
+		        		vr14 = Output2.vr10 - ((float64) 1.61554457443259e-15) * Output2.vr14 - ((float64) 1) * Output2.vi14,
+						vi14 = Output2.vi10 + ((float64) 1) * Output2.vr14 - ((float64) 1.61554457443259e-15) * Output2.vi14,
+		        		vr11 = Output2.vr11 + ((float64) -0.707106781186546) * Output2.vr15 + ((float64) 0.707106781186549) * Output2.vi15,
+						vi11 = Output2.vi11 - ((float64) 0.707106781186549) * Output2.vr15 + ((float64) -0.707106781186546) * Output2.vi15,
+		        		vr15 = Output2.vr11 - ((float64) -0.707106781186546) * Output2.vr15 - ((float64) 0.707106781186549) * Output2.vi15,
+						vi15 = Output2.vi11 + ((float64) 0.707106781186549) * Output2.vr15 - ((float64) -0.707106781186546) * Output2.vi15
+					};
+		            submit(srs, Output3);
+		        }
+		}
+		
+		stream<StockReportSchema> Output4 = Custom(Output3) {
+		    logic
+		        onTuple Output3: {
+		            StockReportSchema srs = {
+		        		vr0 = Output3.vr0 + ((float64) 1) * Output3.vr8 + ((float64) 0) * Output3.vi8,
+						vi0 = Output3.vi0 - ((float64) 0) * Output3.vr8 + ((float64) 1) * Output3.vi8,
+		        		vr8 = Output3.vr0 - ((float64) 1) * Output3.vr8 - ((float64) 0) * Output3.vi8,
+						vi8 = Output3.vi0 + ((float64) 0) * Output3.vr8 - ((float64) 1) * Output3.vi8,
+		        		vr1 = Output3.vr1 + ((float64) 0.923879532511287) * Output3.vr9 + ((float64) 0.382683432365089) * Output3.vi9,
+						vi1 = Output3.vi1 - ((float64) 0.382683432365089) * Output3.vr9 + ((float64) 0.923879532511287) * Output3.vi9,
+		        		vr9 = Output3.vr1 - ((float64) 0.923879532511287) * Output3.vr9 - ((float64) 0.382683432365089) * Output3.vi9,
+						vi9 = Output3.vi1 + ((float64) 0.382683432365089) * Output3.vr9 - ((float64) 0.923879532511287) * Output3.vi9,
+		        		vr2 = Output3.vr2 + ((float64) 0.707106781186548) * Output3.vr10 + ((float64) 0.707106781186547) * Output3.vi10,
+						vi2 = Output3.vi2 - ((float64) 0.707106781186547) * Output3.vr10 + ((float64) 0.707106781186548) * Output3.vi10,
+		        		vr10 = Output3.vr2 - ((float64) 0.707106781186548) * Output3.vr10 - ((float64) 0.707106781186547) * Output3.vi10,
+						vi10 = Output3.vi2 + ((float64) 0.707106781186547) * Output3.vr10 - ((float64) 0.707106781186548) * Output3.vi10,
+		        		vr3 = Output3.vr3 + ((float64) 0.382683432365091) * Output3.vr11 + ((float64) 0.923879532511286) * Output3.vi11,
+						vi3 = Output3.vi3 - ((float64) 0.923879532511286) * Output3.vr11 + ((float64) 0.382683432365091) * Output3.vi11,
+		        		vr11 = Output3.vr3 - ((float64) 0.382683432365091) * Output3.vr11 - ((float64) 0.923879532511286) * Output3.vi11,
+						vi11 = Output3.vi3 + ((float64) 0.923879532511286) * Output3.vr11 - ((float64) 0.382683432365091) * Output3.vi11,
+		        		vr4 = Output3.vr4 + ((float64) 1.61554457443259e-15) * Output3.vr12 + ((float64) 1) * Output3.vi12,
+						vi4 = Output3.vi4 - ((float64) 1) * Output3.vr12 + ((float64) 1.61554457443259e-15) * Output3.vi12,
+		        		vr12 = Output3.vr4 - ((float64) 1.61554457443259e-15) * Output3.vr12 - ((float64) 1) * Output3.vi12,
+						vi12 = Output3.vi4 + ((float64) 1) * Output3.vr12 - ((float64) 1.61554457443259e-15) * Output3.vi12,
+		        		vr5 = Output3.vr5 + ((float64) -0.382683432365088) * Output3.vr13 + ((float64) 0.923879532511288) * Output3.vi13,
+						vi5 = Output3.vi5 - ((float64) 0.923879532511288) * Output3.vr13 + ((float64) -0.382683432365088) * Output3.vi13,
+		        		vr13 = Output3.vr5 - ((float64) -0.382683432365088) * Output3.vr13 - ((float64) 0.923879532511288) * Output3.vi13,
+						vi13 = Output3.vi5 + ((float64) 0.923879532511288) * Output3.vr13 - ((float64) -0.382683432365088) * Output3.vi13,
+		        		vr6 = Output3.vr6 + ((float64) -0.707106781186546) * Output3.vr14 + ((float64) 0.707106781186549) * Output3.vi14,
+						vi6 = Output3.vi6 - ((float64) 0.707106781186549) * Output3.vr14 + ((float64) -0.707106781186546) * Output3.vi14,
+		        		vr14 = Output3.vr6 - ((float64) -0.707106781186546) * Output3.vr14 - ((float64) 0.707106781186549) * Output3.vi14,
+						vi14 = Output3.vi6 + ((float64) 0.707106781186549) * Output3.vr14 - ((float64) -0.707106781186546) * Output3.vi14,
+		        		vr7 = Output3.vr7 + ((float64) -0.923879532511286) * Output3.vr15 + ((float64) 0.382683432365092) * Output3.vi15,
+						vi7 = Output3.vi7 - ((float64) 0.382683432365092) * Output3.vr15 + ((float64) -0.923879532511286) * Output3.vi15,
+		        		vr15 = Output3.vr7 - ((float64) -0.923879532511286) * Output3.vr15 - ((float64) 0.382683432365092) * Output3.vi15,
+						vi15 = Output3.vi7 + ((float64) 0.382683432365092) * Output3.vr15 - ((float64) -0.923879532511286) * Output3.vi15
+					};
+		            submit(srs, Output4);
+		        }
+		}
+		
+		() as FileWriter1 = FileSink(Output4) {
+			param
+			    file: "output_stream.result";
+		}
+}
