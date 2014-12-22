@@ -1,13 +1,13 @@
 namespace my.sample;
 
-composite Main {<% my $pi = 3.14159265358979; my $power=4; my $size=2**$power; %>
+composite Main {<% my $pi = 3.14159265358979; my $power=$ARGV[0]; my $size=2**$power; %>
 	type StockReportSchema = tuple< <% for (my $cnt=0; $cnt<$size; $cnt++) { %>
 	    float64 vr<%=$cnt%>, float64 vi<%=$cnt%><% if ($cnt<$size-1) { %>,<% } %><% } %>
 	>;
 	graph
 		stream<StockReportSchema> Input = FileSource() {
 			param
-				file: "stock_report.dat";
+				file: "input.dat";
 				format: csv;
 				ignoreExtraCSVValues: true;
 		}
@@ -66,6 +66,6 @@ composite Main {<% my $pi = 3.14159265358979; my $power=4; my $size=2**$power; %
 		<% } %>
 		() as FileWriter1 = FileSink(Output<%=$power%>) {
 			param
-			    file: "output_stream.result";
+			    file: "output.dat";
 		}
 }

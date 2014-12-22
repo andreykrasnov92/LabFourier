@@ -22,7 +22,7 @@ composite Main {
 	graph
 		stream<StockReportSchema> Input = FileSource() {
 			param
-				file: "stock_report.dat";
+				file: "input.dat";
 				format: csv;
 				ignoreExtraCSVValues: true;
 		}
@@ -316,6 +316,6 @@ composite Main {
 		
 		() as FileWriter1 = FileSink(Output4) {
 			param
-			    file: "output_stream.result";
+			    file: "output.dat";
 		}
 }
