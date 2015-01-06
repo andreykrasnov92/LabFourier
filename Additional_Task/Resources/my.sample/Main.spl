@@ -1,0 +1,176 @@
+namespace my.sample;
+
+composite Main {
+	type StockReportSchema = tuple< 
+		float64 vr0, float64 vi0,
+		float64 vr1, float64 vi1,
+		float64 vr2, float64 vi2,
+		float64 vr3, float64 vi3,
+		float64 vr4, float64 vi4,
+		float64 vr5, float64 vi5,
+		float64 vr6, float64 vi6,
+		float64 vr7, float64 vi7
+	>;
+	graph
+		stream<StockReportSchema> Input = FileSource() {
+			param
+				file: "input.dat";
+				format: csv;
+				ignoreExtraCSVValues: true;
+		}
+		
+		stream<StockReportSchema> Permutation1 = Custom(Input) {
+			logic
+				onTuple Input: {
+					StockReportSchema srs = {
+						vr0 = Input.vr0,
+						vi0 = -Input.vi0,
+						vr4 = Input.vr1,
+						vi4 = -Input.vi1,
+						vr1 = Input.vr2,
+						vi1 = -Input.vi2,
+						vr5 = Input.vr3,
+						vi5 = -Input.vi3,
+						vr2 = Input.vr4,
+						vi2 = -Input.vi4,
+						vr6 = Input.vr5,
+						vi6 = -Input.vi5,
+						vr3 = Input.vr6,
+						vi3 = -Input.vi6,
+						vr7 = Input.vr7,
+						vi7 = -Input.vi7
+					};
+					submit(srs, Permutation1);
+				}
+		}
+		
+		stream<StockReportSchema> Permutation2 = Custom(Permutation1) {
+			logic
+				onTuple Permutation1: {
+					StockReportSchema srs = {
+						vr0 = Permutation1.vr0,
+						vi0 = Permutation1.vi0,
+						vr2 = Permutation1.vr1,
+						vi2 = Permutation1.vi1,
+						vr1 = Permutation1.vr2,
+						vi1 = Permutation1.vi2,
+						vr3 = Permutation1.vr3,
+						vi3 = Permutation1.vi3,
+						vr4 = Permutation1.vr4,
+						vi4 = Permutation1.vi4,
+						vr6 = Permutation1.vr5,
+						vi6 = Permutation1.vi5,
+						vr5 = Permutation1.vr6,
+						vi5 = Permutation1.vi6,
+						vr7 = Permutation1.vr7,
+						vi7 = Permutation1.vi7
+					};
+					submit(srs, Permutation2);
+				}
+		}
+		
+		stream<StockReportSchema> Butterfly1 = Custom(Permutation2) {
+			logic
+				onTuple Permutation2: {
+					StockReportSchema srs = {
+						vr0 = Permutation2.vr0 + Permutation2.vr1,
+						vi0 = Permutation2.vi0 + Permutation2.vi1,
+						vr1 = Permutation2.vr0 - Permutation2.vr1,
+						vi1 = Permutation2.vi0 - Permutation2.vi1,
+						vr2 = Permutation2.vr2 + Permutation2.vr3,
+						vi2 = Permutation2.vi2 + Permutation2.vi3,
+						vr3 = Permutation2.vr2 - Permutation2.vr3,
+						vi3 = Permutation2.vi2 - Permutation2.vi3,
+						vr4 = Permutation2.vr4 + Permutation2.vr5,
+						vi4 = Permutation2.vi4 + Permutation2.vi5,
+						vr5 = Permutation2.vr4 - Permutation2.vr5,
+						vi5 = Permutation2.vi4 - Permutation2.vi5,
+						vr6 = Permutation2.vr6 + Permutation2.vr7,
+						vi6 = Permutation2.vi6 + Permutation2.vi7,
+						vr7 = Permutation2.vr6 - Permutation2.vr7,
+						vi7 = Permutation2.vi6 - Permutation2.vi7
+					};
+					submit(srs, Butterfly1);
+				}
+		}
+		
+		stream<StockReportSchema> Butterfly2 = Custom(Butterfly1) {
+			logic
+				onTuple Butterfly1: {
+					StockReportSchema srs = {
+						vr0 = Butterfly1.vr0 + ((float64) 1) * Butterfly1.vr2 + ((float64) 0) * Butterfly1.vi2,
+						vi0 = Butterfly1.vi0 - ((float64) 0) * Butterfly1.vr2 + ((float64) 1) * Butterfly1.vi2,
+						vr2 = Butterfly1.vr0 - ((float64) 1) * Butterfly1.vr2 - ((float64) 0) * Butterfly1.vi2,
+						vi2 = Butterfly1.vi0 + ((float64) 0) * Butterfly1.vr2 - ((float64) 1) * Butterfly1.vi2,
+						vr1 = Butterfly1.vr1 + ((float64) 1.61554457443259e-15) * Butterfly1.vr3 + ((float64) 1) * Butterfly1.vi3,
+						vi1 = Butterfly1.vi1 - ((float64) 1) * Butterfly1.vr3 + ((float64) 1.61554457443259e-15) * Butterfly1.vi3,
+						vr3 = Butterfly1.vr1 - ((float64) 1.61554457443259e-15) * Butterfly1.vr3 - ((float64) 1) * Butterfly1.vi3,
+						vi3 = Butterfly1.vi1 + ((float64) 1) * Butterfly1.vr3 - ((float64) 1.61554457443259e-15) * Butterfly1.vi3,
+						vr4 = Butterfly1.vr4 + ((float64) 1) * Butterfly1.vr6 + ((float64) 0) * Butterfly1.vi6,
+						vi4 = Butterfly1.vi4 - ((float64) 0) * Butterfly1.vr6 + ((float64) 1) * Butterfly1.vi6,
+						vr6 = Butterfly1.vr4 - ((float64) 1) * Butterfly1.vr6 - ((float64) 0) * Butterfly1.vi6,
+						vi6 = Butterfly1.vi4 + ((float64) 0) * Butterfly1.vr6 - ((float64) 1) * Butterfly1.vi6,
+						vr5 = Butterfly1.vr5 + ((float64) 1.61554457443259e-15) * Butterfly1.vr7 + ((float64) 1) * Butterfly1.vi7,
+						vi5 = Butterfly1.vi5 - ((float64) 1) * Butterfly1.vr7 + ((float64) 1.61554457443259e-15) * Butterfly1.vi7,
+						vr7 = Butterfly1.vr5 - ((float64) 1.61554457443259e-15) * Butterfly1.vr7 - ((float64) 1) * Butterfly1.vi7,
+						vi7 = Butterfly1.vi5 + ((float64) 1) * Butterfly1.vr7 - ((float64) 1.61554457443259e-15) * Butterfly1.vi7
+					};
+					submit(srs, Butterfly2);
+				}
+		}
+		
+		stream<StockReportSchema> Butterfly3 = Custom(Butterfly2) {
+			logic
+				onTuple Butterfly2: {
+					StockReportSchema srs = {
+						vr0 = Butterfly2.vr0 + ((float64) 1) * Butterfly2.vr4 + ((float64) 0) * Butterfly2.vi4,
+						vi0 = Butterfly2.vi0 - ((float64) 0) * Butterfly2.vr4 + ((float64) 1) * Butterfly2.vi4,
+						vr4 = Butterfly2.vr0 - ((float64) 1) * Butterfly2.vr4 - ((float64) 0) * Butterfly2.vi4,
+						vi4 = Butterfly2.vi0 + ((float64) 0) * Butterfly2.vr4 - ((float64) 1) * Butterfly2.vi4,
+						vr1 = Butterfly2.vr1 + ((float64) 0.707106781186548) * Butterfly2.vr5 + ((float64) 0.707106781186547) * Butterfly2.vi5,
+						vi1 = Butterfly2.vi1 - ((float64) 0.707106781186547) * Butterfly2.vr5 + ((float64) 0.707106781186548) * Butterfly2.vi5,
+						vr5 = Butterfly2.vr1 - ((float64) 0.707106781186548) * Butterfly2.vr5 - ((float64) 0.707106781186547) * Butterfly2.vi5,
+						vi5 = Butterfly2.vi1 + ((float64) 0.707106781186547) * Butterfly2.vr5 - ((float64) 0.707106781186548) * Butterfly2.vi5,
+						vr2 = Butterfly2.vr2 + ((float64) 1.61554457443259e-15) * Butterfly2.vr6 + ((float64) 1) * Butterfly2.vi6,
+						vi2 = Butterfly2.vi2 - ((float64) 1) * Butterfly2.vr6 + ((float64) 1.61554457443259e-15) * Butterfly2.vi6,
+						vr6 = Butterfly2.vr2 - ((float64) 1.61554457443259e-15) * Butterfly2.vr6 - ((float64) 1) * Butterfly2.vi6,
+						vi6 = Butterfly2.vi2 + ((float64) 1) * Butterfly2.vr6 - ((float64) 1.61554457443259e-15) * Butterfly2.vi6,
+						vr3 = Butterfly2.vr3 + ((float64) -0.707106781186546) * Butterfly2.vr7 + ((float64) 0.707106781186549) * Butterfly2.vi7,
+						vi3 = Butterfly2.vi3 - ((float64) 0.707106781186549) * Butterfly2.vr7 + ((float64) -0.707106781186546) * Butterfly2.vi7,
+						vr7 = Butterfly2.vr3 - ((float64) -0.707106781186546) * Butterfly2.vr7 - ((float64) 0.707106781186549) * Butterfly2.vi7,
+						vi7 = Butterfly2.vi3 + ((float64) 0.707106781186549) * Butterfly2.vr7 - ((float64) -0.707106781186546) * Butterfly2.vi7
+					};
+					submit(srs, Butterfly3);
+				}
+		}
+		
+		stream<StockReportSchema> Output = Custom(Butterfly3) {
+			logic
+				onTuple Butterfly3: {
+					StockReportSchema srs = {
+						vr0 = Butterfly3.vr0 / ((float64) 8),
+						vi0 = -Butterfly3.vi0 / ((float64) 8),
+						vr1 = Butterfly3.vr1 / ((float64) 8),
+						vi1 = -Butterfly3.vi1 / ((float64) 8),
+						vr2 = Butterfly3.vr2 / ((float64) 8),
+						vi2 = -Butterfly3.vi2 / ((float64) 8),
+						vr3 = Butterfly3.vr3 / ((float64) 8),
+						vi3 = -Butterfly3.vi3 / ((float64) 8),
+						vr4 = Butterfly3.vr4 / ((float64) 8),
+						vi4 = -Butterfly3.vi4 / ((float64) 8),
+						vr5 = Butterfly3.vr5 / ((float64) 8),
+						vi5 = -Butterfly3.vi5 / ((float64) 8),
+						vr6 = Butterfly3.vr6 / ((float64) 8),
+						vi6 = -Butterfly3.vi6 / ((float64) 8),
+						vr7 = Butterfly3.vr7 / ((float64) 8),
+						vi7 = -Butterfly3.vi7 / ((float64) 8)
+					};
+					submit(srs, Output);
+				}
+		}
+		
+		() as FileWriter1 = FileSink(Output) {
+			param
+				file: "output.dat";
+		}
+}

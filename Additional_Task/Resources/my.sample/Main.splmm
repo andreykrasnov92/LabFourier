@@ -1,0 +1,82 @@
+namespace my.sample;
+
+composite Main {<% my $pi = 3.14159265358979; my $power=$ARGV[0]; my $inverse=$ARGV[1]; my $size=2**$power; %>
+	type StockReportSchema = tuple< <% for (my $cnt=0; $cnt<$size; $cnt++) { %>
+		float64 vr<%=$cnt%>, float64 vi<%=$cnt%><% if ($cnt<$size-1) { %>,<% } %><% } %>
+	>;
+	graph
+		stream<StockReportSchema> Input = FileSource() {
+			param
+				file: "input.dat";
+				format: csv;
+				ignoreExtraCSVValues: true;
+		}
+		
+		stream<StockReportSchema> Permutation1 = Custom(Input) {
+			logic
+				onTuple Input: {
+					StockReportSchema srs = {<% for (my $k=0; $k<2**($power-1); $k++) { %><% my $b=$k+2**($power-1); my $c=2*$k; my $d=$c+1; %>
+						vr<%=$k%> = Input.vr<%=$c%>,
+						vi<%=$k%> = <% if ($inverse==1) { %>-<% } %>Input.vi<%=$c%>,
+						vr<%=$b%> = Input.vr<%=$d%>,
+						vi<%=$b%> = <% if ($inverse==1) { %>-<% } %>Input.vi<%=$d%><% if ($d<$size-1) { %>,<% } %><% } %>
+					};
+					submit(srs, Permutation1);
+				}
+		}
+		<% for (my $i=2; $i<$power; $i++) { %>
+		stream<StockReportSchema> Permutation<%=$i%> = Custom(Permutation<%=$i-1%>) {
+			logic
+				onTuple Permutation<%=$i-1%>: {
+					StockReportSchema srs = {<% for (my $j=0; $j<2**($i-1); $j++) { %><% for (my $k=0; $k<2**($power-$i); $k++) { %><% my $a=2**($power-$i+1)*$j+$k; my $b=$a+2**($power-$i); my $c=2*(2**($power-$i)*$j+$k); my $d=$c+1; %>
+						vr<%=$a%> = Permutation<%=$i-1%>.vr<%=$c%>,
+						vi<%=$a%> = Permutation<%=$i-1%>.vi<%=$c%>,
+						vr<%=$b%> = Permutation<%=$i-1%>.vr<%=$d%>,
+						vi<%=$b%> = Permutation<%=$i-1%>.vi<%=$d%><% if ($d<$size-1) { %>,<% } %><% } %><% } %>
+					};
+					submit(srs, Permutation<%=$i%>);
+				}
+		}
+		<% } %>
+		stream<StockReportSchema> Butterfly1 = Custom(Permutation<%=$power-1%>) {
+			logic
+				onTuple Permutation<%=$power-1%>: {
+					StockReportSchema srs = {<% for (my $j=0; $j<2**($power-1); $j++) { %><% my $a=2*$j; my $b=$a+1; %>
+						vr<%=$a%> = Permutation<%=$power-1%>.vr<%=$a%> + Permutation<%=$power-1%>.vr<%=$b%>,
+						vi<%=$a%> = Permutation<%=$power-1%>.vi<%=$a%> + Permutation<%=$power-1%>.vi<%=$b%>,
+						vr<%=$b%> = Permutation<%=$power-1%>.vr<%=$a%> - Permutation<%=$power-1%>.vr<%=$b%>,
+						vi<%=$b%> = Permutation<%=$power-1%>.vi<%=$a%> - Permutation<%=$power-1%>.vi<%=$b%><% if ($b<$size-1) { %>,<% } %><% } %>
+					};
+					submit(srs, Butterfly1);
+				}
+		}
+		<% for (my $i=2; $i<=$power; $i++) { %>
+		stream<StockReportSchema> Butterfly<%=$i%> = Custom(Butterfly<%=$i-1%>) {
+			logic
+				onTuple Butterfly<%=$i-1%>: {
+					StockReportSchema srs = {<% for (my $j=0; $j<2**($power-$i); $j++) { %><% for (my $k=0; $k<2**($i-1); $k++) { %><% my $p=2*$pi*$k*2**($power-$i)/$size; my $a=2**$i*$j+$k; my $b=$a+2**($i-1); %>
+						vr<%=$a%> = Butterfly<%=$i-1%>.vr<%=$a%> + ((float64) <%=cos($p)%>) * Butterfly<%=$i-1%>.vr<%=$b%> + ((float64) <%=sin($p)%>) * Butterfly<%=$i-1%>.vi<%=$b%>,
+						vi<%=$a%> = Butterfly<%=$i-1%>.vi<%=$a%> - ((float64) <%=sin($p)%>) * Butterfly<%=$i-1%>.vr<%=$b%> + ((float64) <%=cos($p)%>) * Butterfly<%=$i-1%>.vi<%=$b%>,
+						vr<%=$b%> = Butterfly<%=$i-1%>.vr<%=$a%> - ((float64) <%=cos($p)%>) * Butterfly<%=$i-1%>.vr<%=$b%> - ((float64) <%=sin($p)%>) * Butterfly<%=$i-1%>.vi<%=$b%>,
+						vi<%=$b%> = Butterfly<%=$i-1%>.vi<%=$a%> + ((float64) <%=sin($p)%>) * Butterfly<%=$i-1%>.vr<%=$b%> - ((float64) <%=cos($p)%>) * Butterfly<%=$i-1%>.vi<%=$b%><% if ($b<$size-1) { %>,<% } %><% } %><% } %>
+					};
+					submit(srs, Butterfly<%=$i%>);
+				}
+		}
+		<% } %><% my $div=1; if ($inverse==1) { $div=$size; } %>
+		stream<StockReportSchema> Output = Custom(Butterfly<%=$power%>) {
+			logic
+				onTuple Butterfly<%=$power%>: {
+					StockReportSchema srs = {<% for (my $cnt=0; $cnt<$size; $cnt++) { %>
+						vr<%=$cnt%> = Butterfly<%=$power%>.vr<%=$cnt%> / ((float64) <%=$div%>),
+						vi<%=$cnt%> = <% if ($inverse==1) { %>-<% } %>Butterfly<%=$power%>.vi<%=$cnt%> / ((float64) <%=$div%>)<% if ($cnt<$size-1) { %>,<% } %><% } %>
+					};
+					submit(srs, Output);
+				}
+		}
+		
+		() as FileWriter1 = FileSink(Output) {
+			param
+				file: "output.dat";
+		}
+}
